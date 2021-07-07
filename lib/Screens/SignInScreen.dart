@@ -161,6 +161,7 @@ class SignUpAuthForm extends StatelessWidget {
               ),
               child: TextFormField(
                 key: null,
+                obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Password',
                   icon: Icon(
