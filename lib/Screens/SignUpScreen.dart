@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 import '../Models/clipClass.dart';
-import '../Screens/SignInScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
-
+  static const routeName = '/SignUpScreen';
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -26,14 +24,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               width: size.width,
               child: ClipPath(
                 clipper: Clipper(),
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('Assets/Images/image4.jpg'),
-                      fit: BoxFit.fill,
+                child: Container(color: kPrimaryColor
+                    // decoration: BoxDecoration(
+                    //   image: DecorationImage(
+                    //     image: AssetImage('Assets/Images/image4.jpg'),
+                    //     fit: BoxFit.fill,
+                    //   ),
+                    //),
                     ),
-                  ),
-                ),
               ),
             ),
             Padding(
@@ -49,9 +47,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 10, left: 10),
+              padding: EdgeInsets.only(bottom: 10, left: 15),
               child: Text(
-                'Welcome Back',
+                'Welcome ',
                 style: TextStyle(
                   color: kPrimaryColor.withOpacity(0.5),
                   fontFamily: 'Poppins',
@@ -60,24 +58,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             SizedBox(
-              height: 50,
+              height: 40,
             ),
-            SignUpAuthForm(size: size),
+            SignInAuthForm(size: size),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Don\'t have an account?',
+                  'Already have an account?',
                   style: TextStyle(
                     color: Colors.black,
                     fontFamily: 'Poppins',
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    Navigator.pushReplacementNamed(
-                        context, SignInScreen.routeName);
-                  },
+                  onTap: null,
                   child: Text(
                     'Sign In',
                     style: TextStyle(
@@ -97,8 +92,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 }
 
-class SignUpAuthForm extends StatelessWidget {
-  const SignUpAuthForm({
+class SignInAuthForm extends StatelessWidget {
+  const SignInAuthForm({
     Key? key,
     required this.size,
   }) : super(key: key);
@@ -113,7 +108,7 @@ class SignUpAuthForm extends StatelessWidget {
         children: [
           Container(
             height: 40,
-            margin: EdgeInsets.only(left: 32, bottom: 8, right: 32),
+            margin: EdgeInsets.only(left: 32, bottom: 15, right: 32),
             padding: EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
@@ -129,11 +124,34 @@ class SignUpAuthForm extends StatelessWidget {
             child: TextFormField(
               key: null,
               decoration: InputDecoration(
-                hintText: 'Email',
-                icon: Icon(
-                  Icons.alternate_email_rounded,
+                hintText: 'Fullname',
+                hintStyle: TextStyle(
                   color: kFormHintTextColor,
+                  fontFamily: 'Poppins',
                 ),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          Container(
+            height: 40,
+            margin: EdgeInsets.only(left: 32, bottom: 15, right: 32),
+            padding: EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: kPrimaryColor.withOpacity(0.1),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 3),
+                  blurRadius: 3,
+                  color: kPrimaryColor.withOpacity(0.10),
+                ),
+              ],
+            ),
+            child: TextFormField(
+              key: null,
+              decoration: InputDecoration(
+                hintText: 'email@futa.edu.ng',
                 hintStyle: TextStyle(
                   color: kFormHintTextColor,
                   fontFamily: 'Poppins',
@@ -144,7 +162,7 @@ class SignUpAuthForm extends StatelessWidget {
           ),
           Container(
               height: 40,
-              margin: EdgeInsets.only(left: 32, bottom: 8, right: 32),
+              margin: EdgeInsets.only(left: 32, bottom: 15, right: 32),
               padding: EdgeInsets.only(left: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -160,11 +178,31 @@ class SignUpAuthForm extends StatelessWidget {
               child: TextFormField(
                 key: null,
                 decoration: InputDecoration(
-                  hintText: 'Password',
-                  icon: Icon(
-                    Icons.security,
-                    color: kFormHintTextColor,
+                  hintText: 'Enter password',
+                  hintStyle: TextStyle(
+                      color: kFormHintTextColor, fontFamily: 'Poppins'),
+                  border: InputBorder.none,
+                ),
+              )),
+          Container(
+              height: 40,
+              margin: EdgeInsets.only(left: 32, bottom: 15, right: 32),
+              padding: EdgeInsets.only(left: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: kPrimaryColor.withOpacity(0.1),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 3),
+                    blurRadius: 3,
+                    color: kPrimaryColor.withOpacity(0.10),
                   ),
+                ],
+              ),
+              child: TextFormField(
+                key: null,
+                decoration: InputDecoration(
+                  hintText: 'Confirm password',
                   hintStyle: TextStyle(
                       color: kFormHintTextColor, fontFamily: 'Poppins'),
                   border: InputBorder.none,
@@ -175,7 +213,7 @@ class SignUpAuthForm extends StatelessWidget {
             child: Container(
               height: 40,
               width: size.width,
-              margin: EdgeInsets.only(left: 40, bottom: 8, right: 40),
+              margin: EdgeInsets.only(left: 40, bottom: 15, right: 40),
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: kPrimaryColor,

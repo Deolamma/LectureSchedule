@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lecture_schedule">
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
    <application
         android:label="lecture_schedule"
         android:icon="@mipmap/ic_launcher">
