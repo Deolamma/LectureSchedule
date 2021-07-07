@@ -177,6 +177,7 @@ class SignInAuthForm extends StatelessWidget {
               ),
               child: TextFormField(
                 key: null,
+                obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Enter password',
                   hintStyle: TextStyle(
@@ -201,6 +202,7 @@ class SignInAuthForm extends StatelessWidget {
               ),
               child: TextFormField(
                 key: null,
+                obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Confirm password',
                   hintStyle: TextStyle(
