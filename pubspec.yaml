@@ -47,6 +47,12 @@ dependencies:
   #Allows us to use the showDatePicker method
   flutter_datetime_picker: ^1.5.1
 
+  #allows us to make http request to a web database
+  http: ^0.13.3
+  #In this application I used this to enable the firstWhereOrNull method
+  collection: ^1.15.0
+  flutter_svg: ^0.22.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

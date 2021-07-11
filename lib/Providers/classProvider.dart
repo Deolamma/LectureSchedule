@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:collection/collection.dart';
+
 import '../Models/class.dart';
+import '../Models/exceptionClass.dart';
 
 class ClassProvider with ChangeNotifier {
   List<Class> _classItem = [];
@@ -8,16 +14,96 @@ class ClassProvider with ChangeNotifier {
     return [..._classItem];
   }
 
-  void addClass(Class nClass) {
-    var newClass = Class(
-        level: nClass.level,
-        courseCode: nClass.courseCode,
-        courseTitle: nClass.courseTitle,
-        endDate: nClass.endDate,
-        startDate: nClass.startDate,
-        timeOfLecture: nClass.timeOfLecture);
-    _classItem.add(newClass);
-    print(_classItem.length);
+  Future<void> addClass(Class nClass) async {
+    final url = Uri.https(
+        'lecturescheduleapp-default-rtdb.firebaseio.com', '/Classes.json');
+
+    try {
+      if (_classItem.isNotEmpty) {
+        final existingData = _classItem.firstWhereOrNull(
+          (classItem) => classItem.courseCode == nClass.courseCode,
+        );
+        if (_classItem.contains(existingData)) {
+          throw ExceptionClass('This Class already exists');
+        }
+      }
+      final response = await http.post(
+        url,
+        body: json.encode({
+          'level': nClass.level,
+          'courseCode': nClass.courseCode,
+          'courseTitle': nClass.courseTitle,
+          'timeOfLecture': nClass.timeOfLecture,
+          'startDate': nClass.startDate,
+          'endDate': nClass.endDate,
+        }),
+      );
+
+      final newClass = Class(
+          id: json.decode(response.body)['name'],
+          level: nClass.level,
+          courseCode: nClass.courseCode,
+          courseTitle: nClass.courseTitle,
+          endDate: nClass.endDate,
+          startDate: nClass.startDate,
+          timeOfLecture: nClass.timeOfLecture);
+
+      _classItem.add(newClass);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> fetchData() async {
+    final url = Uri.parse(
+        'https://lecturescheduleapp-default-rtdb.firebaseio.com/Classes.json');
+
+    try {
+      final response = await http.get(url);
+      List<Class>? loadClassData = [];
+
+      final extractedData = json.decode(response.body) as Map<String, dynamic>?;
+      // ignore: unnecessary_null_comparison
+      if (extractedData == null) {
+        return;
+      }
+      extractedData.forEach((dataId, classData) {
+        loadClassData.add(
+          Class(
+            id: dataId,
+            level: classData['level'],
+            courseCode: classData['courseCode'],
+            courseTitle: classData['courseTitle'],
+            timeOfLecture: classData['timeOfLecture'],
+            endDate: classData['endDate'],
+            startDate: classData['startDate'],
+          ),
+        );
+      });
+      _classItem = loadClassData;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> deleteClass(String courseCode) async {
+    var dataIndex = _classItem
+        .indexWhere((classItem) => classItem.courseCode == courseCode);
+    final idPath = _classItem[dataIndex].id;
+    Class? dataValue = _classItem[dataIndex];
+    final url = Uri.https('lecturescheduleapp-default-rtdb.firebaseio.com',
+        '/Classes/$idPath.json');
+
+    _classItem.removeWhere((classItem) => classItem.courseCode == courseCode);
     notifyListeners();
+    var response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _classItem.insert(dataIndex, dataValue);
+      notifyListeners();
+      throw ExceptionClass('Deleting failed');
+    }
+    dataValue = null;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants.dart';
 import '../Models/clipClass.dart';
@@ -99,7 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 }
 
-class SignUpAuthForm extends StatelessWidget {
+class SignUpAuthForm extends StatefulWidget {
   const SignUpAuthForm({
     Key? key,
     required this.size,
@@ -108,8 +109,39 @@ class SignUpAuthForm extends StatelessWidget {
   final Size size;
 
   @override
+  _SignUpAuthFormState createState() => _SignUpAuthFormState();
+}
+
+class _SignUpAuthFormState extends State<SignUpAuthForm> {
+  final _form = GlobalKey<FormState>();
+
+  var _authData = {
+    'fullName': '',
+    'email': '',
+    'password': '',
+  };
+
+  final _passwordFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _submitForm() {
+    var isValid = _form.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    _form.currentState!.save();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final currentFocus = FocusScope.of(context);
     return Form(
+      key: _form,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -129,7 +161,6 @@ class SignUpAuthForm extends StatelessWidget {
               ],
             ),
             child: TextFormField(
-              key: null,
               decoration: InputDecoration(
                 hintText: 'Email',
                 icon: Icon(
@@ -142,26 +173,34 @@ class SignUpAuthForm extends StatelessWidget {
                 ),
                 border: InputBorder.none,
               ),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.emailAddress,
+              onFieldSubmitted: (_) {
+                currentFocus.requestFocus(_passwordFocusNode);
+              },
+              onSaved: (value) {
+                _authData['email'] = value!;
+              },
             ),
           ),
           Container(
-              height: 40,
-              margin: EdgeInsets.only(left: 32, bottom: 15, right: 32),
-              padding: EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: kPrimaryColor.withOpacity(0.1),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 3),
-                    blurRadius: 3,
-                    color: kPrimaryColor.withOpacity(0.10),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                key: null,
+            height: 40,
+            margin: EdgeInsets.only(left: 32, bottom: 15, right: 32),
+            padding: EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: kPrimaryColor.withOpacity(0.1),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 3),
+                  blurRadius: 3,
+                  color: kPrimaryColor.withOpacity(0.10),
+                ),
+              ],
+            ),
+            child: TextFormField(
                 obscureText: true,
+                focusNode: _passwordFocusNode,
                 decoration: InputDecoration(
                   hintText: 'Password',
                   icon: Icon(
@@ -172,12 +211,16 @@ class SignUpAuthForm extends StatelessWidget {
                       color: kFormHintTextColor, fontFamily: 'Poppins'),
                   border: InputBorder.none,
                 ),
-              )),
+                textInputAction: TextInputAction.done,
+                onSaved: (value) {
+                  _authData['password'] = value!;
+                }),
+          ),
           GestureDetector(
-            onTap: null,
+            onTap: _submitForm,
             child: Container(
               height: 40,
-              width: size.width,
+              width: widget.size.width,
               margin: EdgeInsets.only(left: 40, bottom: 15, right: 40),
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(

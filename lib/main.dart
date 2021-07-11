@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:lecture_schedule/Screens/HomeScreen.dart';
+import 'package:lecture_schedule/Screens/scheduleScreen.dart';
 import 'package:provider/provider.dart';
 
 import './constants.dart';
+
 import './Screens/pdfViewScreen.dart';
 import './Screens/studentAttendanceScreen.dart';
 import './Screens/SignInScreen.dart';
 import './Screens/classScreen.dart';
 import './Screens/CreateClassScreen.dart';
+import './Screens/createScheduleScreen.dart';
+
 import './Providers/classProvider.dart';
+import './Providers/scheduleProvider.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -22,18 +28,27 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ClassProvider()),
+        ChangeNotifierProvider(
+          create: (context) => ScheduleProvider(),
+        )
       ],
       child: MaterialApp(
         title: 'Lecture Schedule',
-        theme: ThemeData(
+        theme: ThemeData.light().copyWith(
           primaryColor: kPrimaryColor,
           accentColor: Colors.amber,
+          colorScheme: ColorScheme.light().copyWith(
+            primary: kPrimaryColor.withOpacity(0.9),
+          ),
           textTheme: Theme.of(context).textTheme.apply(bodyColor: kTextColor),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         routes: {
-          '/': (context) => ClassScreen(),
+          '/': (context) => HomeScreen(),
+          //ClassScreen(),
           // SignUpScreen(),
+          ScheduleScreen.routeName: (context) => ScheduleScreen(),
+          CreateScheduleScreen.routeName: (context) => CreateScheduleScreen(),
           StudentAttendanceScreen.routeName: (context) =>
               StudentAttendanceScreen(),
           SignInScreen.routeName: (context) => SignInScreen(),

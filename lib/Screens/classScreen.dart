@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import '../constants.dart';
 import '../Providers/classProvider.dart';
 import '../Screens/CreateClassScreen.dart';
 import '../Widgets/class_item_widget.dart';
+import '../Widgets/createContentWidget.dart';
 
 class ClassScreen extends StatefulWidget {
   const ClassScreen({Key? key}) : super(key: key);
@@ -15,6 +15,26 @@ class ClassScreen extends StatefulWidget {
 }
 
 class _ClassScreenState extends State<ClassScreen> {
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ClassProvider>(context).fetchData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+
+    super.didChangeDependencies();
+  }
+
   int _weeksInDate(DateTime start, DateTime end) {
     start = DateTime(start.year, start.month, start.day);
     end = DateTime(end.year, end.month, end.day);
@@ -31,78 +51,39 @@ class _ClassScreenState extends State<ClassScreen> {
         title: Text('Classes'),
         centerTitle: true,
       ),
-      body: classData.isEmpty
+      body: _isLoading
           ? Center(
-              child: Container(
-                height: 200,
-                width: 200,
-                decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'No Classes Created yet!!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: kBackgroundColor,
-                        fontFamily: 'Fredericka',
-                        fontSize: 25,
-                      ),
-                    ),
-                    Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: TextButton.icon(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(CreateClassScreen.routeName);
-                        },
-                        icon: Icon(
-                          Icons.add,
-                          color: kBackgroundColor,
-                        ),
-                        label: Text(
-                          'Create Class',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            color: kBackgroundColor,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+              child: CircularProgressIndicator(
+                backgroundColor: Theme.of(context).accentColor,
               ),
             )
-          : ListView.builder(
-              itemCount: classData.length,
-              itemBuilder: (context, index) {
-                DateTime toParseS =
-                    DateFormat('dd-MM-yyyy').parse(classData[index].startDate!);
-                DateTime toParseE =
-                    DateFormat('dd-MM-yyyy').parse(classData[index].endDate!);
+          : classData.isEmpty
+              ? CreateContentWidget(
+                  noContent: 'Classes',
+                  createContent: 'Create Class',
+                  route: CreateClassScreen.routeName,
+                )
+              : ListView.builder(
+                  itemCount: classData.length,
+                  itemBuilder: (context, index) {
+                    DateTime toParseS = DateFormat('dd-MM-yyyy')
+                        .parse(classData[index].startDate!);
+                    DateTime toParseE = DateFormat('dd-MM-yyyy')
+                        .parse(classData[index].endDate!);
 
-                var extractWeekNo = _weeksInDate(toParseS, toParseE);
+                    var extractWeekNo = _weeksInDate(toParseS, toParseE);
 
-                var extractDay = DateFormat('E').format(toParseS);
+                    var extractDay = DateFormat('E').format(toParseS);
 
-                return ClassItem(
-                  day: extractDay,
-                  timeOfLecture: classData[index].timeOfLecture,
-                  level: (classData[index].level).toString(),
-                  courseCode: classData[index].courseCode,
-                  courseTitle: classData[index].courseTitle,
-                  duration: extractWeekNo.toString(),
-                );
-              }),
+                    return ClassItem(
+                      day: extractDay,
+                      timeOfLecture: classData[index].timeOfLecture,
+                      level: (classData[index].level).toString(),
+                      courseCode: classData[index].courseCode,
+                      courseTitle: classData[index].courseTitle,
+                      duration: extractWeekNo.toString(),
+                    );
+                  }),
       floatingActionButton: classData.isEmpty
           ? null
           : FloatingActionButton(

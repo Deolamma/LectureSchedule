@@ -228,7 +228,7 @@ class FacultyDataProvider with ChangeNotifier {
     return [..._facultyData];
   }
 
-  void setAndFetchData() {
+  void fetchAndSetData() {
     //
   }
 }

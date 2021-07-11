@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lecture_schedule/Models/exceptionClass.dart';
+import 'package:lecture_schedule/Providers/classProvider.dart';
 import 'package:lecture_schedule/constants.dart';
+import 'package:provider/provider.dart';
 
 class ClassItem extends StatelessWidget {
+  final String? id;
   final String? level;
   final String? courseCode;
   final String? courseTitle;
@@ -9,6 +13,7 @@ class ClassItem extends StatelessWidget {
   final String? duration;
   final String? timeOfLecture;
   const ClassItem({
+    this.id,
     this.courseCode,
     this.courseTitle,
     this.duration,
@@ -19,6 +24,7 @@ class ClassItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var scaffold = ScaffoldMessenger.of(context);
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       decoration: BoxDecoration(
@@ -51,7 +57,7 @@ class ClassItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              courseCode!.toUpperCase(),
+              courseCode!,
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.w600,
@@ -83,7 +89,19 @@ class ClassItem extends StatelessWidget {
           children: [
             Expanded(
               child: GestureDetector(
-                onTap: null,
+                onTap: () async {
+                  try {
+                    await Provider.of<ClassProvider>(context, listen: false)
+                        .deleteClass(courseCode!);
+                  } on ExceptionClass catch (error) {
+                    scaffold.showSnackBar(SnackBar(
+                      content: Text(
+                        error.message!,
+                        textAlign: TextAlign.center,
+                      ),
+                    ));
+                  }
+                },
                 child: Icon(
                   Icons.delete,
                   color: Colors.red,
@@ -91,8 +109,11 @@ class ClassItem extends StatelessWidget {
               ),
             ),
             Expanded(
-                child: Container(
-                    margin: EdgeInsets.only(top: 5), child: Text(duration!))),
+              child: Container(
+                margin: EdgeInsets.only(top: 5),
+                child: Text('${duration!}wks'),
+              ),
+            ),
           ],
         ),
       ),
