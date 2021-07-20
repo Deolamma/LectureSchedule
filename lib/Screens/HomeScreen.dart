@@ -1,15 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lecture_schedule/Providers/facultyDataProvider.dart';
+import 'package:lecture_schedule/Widgets/drawer.dart';
+import 'package:lecture_schedule/Widgets/facultyGridViewWidget.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import '../Providers/notificationProvider.dart';
 import '../Widgets/custom_bottomNavBar_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  var _isInit = true;
+  var _isLoading = false;
+  // @override
+  // void initState() {
+  //   Provider.of<Notifications>(context, listen: false).initialize();
+  //   super.initState();
+  // }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      Provider.of<FacultyDataProvider>(context).fetchFaculty().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+        drawer: DrawerScreen(),
         backgroundColor: Colors.white,
         body: Stack(
           children: [
@@ -30,6 +68,7 @@ class HeaderWithTitleAndGridBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final facultyList = Provider.of<FacultyDataProvider>(context).facultyData;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -48,13 +87,45 @@ class HeaderWithTitleAndGridBody extends StatelessWidget {
                         bottomRight: Radius.circular(45),
                       )),
                 ),
+                Builder(
+                  builder: (context) => Positioned(
+                    top: size.height * 0.03,
+                    child: Container(
+                      width: size.width,
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                            icon: SvgPicture.asset(
+                              'Assets/Icons/menu.svg',
+                              height: 30,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: null,
+                            icon: SvgPicture.asset(
+                              'Assets/Icons/account.svg',
+                              height: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 Positioned(
-                  top: 100,
+                  top: size.height * 0.1,
                   left: 20,
                   right: 20,
                   child: Container(
+                    width: size.width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         RichText(
                             text: TextSpan(children: [
@@ -64,34 +135,31 @@ class HeaderWithTitleAndGridBody extends StatelessWidget {
                                   .textTheme
                                   .headline4!
                                   .copyWith(
-                                      fontFamily: 'poppins',
-                                      color: kBackgroundColor,
-                                      fontWeight: FontWeight.bold)),
+                                    fontFamily: 'Fredericka',
+                                    color: kBackgroundColor,
+                                  )),
                           TextSpan(
                             text: 'Dule',
                             style:
                                 Theme.of(context).textTheme.headline2!.copyWith(
-                                      fontFamily: 'Quicksand',
+                                      fontFamily: 'Poppins',
                                       color: kBackgroundColor,
                                     ),
                           ),
                         ])),
-
-                        Icon(
-                          Icons.event_note,
-                          color: kBackgroundColor,
-                          size: 40,
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(
+                                'Assets/Images/appIcon.jpg',
+                              ),
+                              fit: BoxFit.contain,
+                            ),
+                            shape: BoxShape.circle,
+                          ),
                         )
-                        // Container(
-                        //   height: 30,
-                        //   width: 30,
-                        //   decoration: BoxDecoration(
-                        //     image: DecorationImage(
-                        //       image: AssetImage('Assets/Images/SchIcon.png'),
-                        //       fit: BoxFit.cover,
-                        //     ),
-                        //   ),
-                        // )
                       ],
                     ),
                   ),
@@ -99,7 +167,27 @@ class HeaderWithTitleAndGridBody extends StatelessWidget {
               ],
             ),
           ),
-          Container()
+          Container(
+            padding: EdgeInsets.only(bottom: 50),
+            width: size.width,
+            height: size.height * 0.7,
+            child: GridView.builder(
+                padding: const EdgeInsets.all(10.0),
+                itemCount: facultyList.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 2 / 2,
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
+                ),
+                itemBuilder: (context, index) {
+                  return FacultyGridView(
+                    bgImage: facultyList[index].bgImage,
+                    id: facultyList[index].id,
+                    name: facultyList[index].name,
+                  );
+                }),
+          ),
         ],
       ),
     );

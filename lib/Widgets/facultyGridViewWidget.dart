@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:lecture_schedule/constants.dart';
 
 class FacultyGridView extends StatelessWidget {
+  final String? bgImage;
+  final String? name;
+  final String? id;
+
+  FacultyGridView({
+    this.bgImage,
+    this.name,
+    this.id,
+  });
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -10,30 +20,28 @@ class FacultyGridView extends StatelessWidget {
         child: Stack(children: [
           GestureDetector(
             onTap: null,
-            child: null,
+            child: Image.network(
+              bgImage!,
+              fit: BoxFit.fitHeight,
+              height: double.infinity,
+            ),
           ),
+          Container(color: Colors.black.withOpacity(0.2)),
           Container(
+            padding: EdgeInsets.all(5),
             child: Text(
-              '',
-              style: TextStyle(color: kBackgroundColor, fontFamily: 'Poppins'),
+              name!,
+              style: TextStyle(
+                  color: kBackgroundColor, fontFamily: 'Poppins', fontSize: 18),
             ),
           ),
         ]),
         footer: GridTileBar(
-          title: Row(
-            children: [
-              Text(
-                '',
-                style: TextStyle(fontFamily: 'Poppins'),
-              ),
-              IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-              ),
-            ],
+          backgroundColor: Colors.black.withOpacity(0.5),
+          title: Text(
+            id!,
+            style: TextStyle(fontFamily: 'Poppins'),
+            textAlign: TextAlign.center,
           ),
         ),
       ),

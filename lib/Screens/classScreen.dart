@@ -1,14 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import '../Providers/classProvider.dart';
+import '../Models/pdfModel.dart';
 import '../Screens/CreateClassScreen.dart';
+import '../Screens/pdfViewScreen.dart';
+import '../Screens/studentAttendanceScreen.dart';
 import '../Widgets/class_item_widget.dart';
 import '../Widgets/createContentWidget.dart';
+import '../Widgets/drawer.dart';
 
 class ClassScreen extends StatefulWidget {
   const ClassScreen({Key? key}) : super(key: key);
+  static const routeName = '/ClassScreen';
 
   @override
   _ClassScreenState createState() => _ClassScreenState();
@@ -17,6 +24,7 @@ class ClassScreen extends StatefulWidget {
 class _ClassScreenState extends State<ClassScreen> {
   var _isInit = true;
   var _isLoading = false;
+  File? file;
 
   @override
   void didChangeDependencies() {
@@ -42,14 +50,51 @@ class _ClassScreenState extends State<ClassScreen> {
     return ((end.difference(start).inDays / 7)).round();
   }
 
+  void onSelected(BuildContext context, int item) async {
+    switch (item) {
+      case 0:
+        {
+          file = await PdfModel.pickFile();
+          if (file == null) return;
+          Navigator.of(context)
+              .pushNamed(PdfViewerScreen.routeName, arguments: file);
+        }
+        break;
+      case 1:
+        {
+          file = await PdfModel.pickCsv();
+          if (file == null) return;
+          Navigator.of(context)
+              .pushNamed(StudentAttendanceScreen.routeName, arguments: file);
+        }
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var classData = Provider.of<ClassProvider>(context).classItem;
 
     return Scaffold(
+      drawer: DrawerScreen(),
       appBar: AppBar(
         title: Text('Classes'),
         centerTitle: true,
+        actions: [
+          PopupMenuButton<int>(
+            onSelected: (item) => onSelected(context, item),
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(
+                value: 0,
+                child: Text('Open PDF'),
+              ),
+              PopupMenuItem<int>(
+                value: 1,
+                child: Text('student list'),
+              ),
+            ],
+          )
+        ],
       ),
       body: _isLoading
           ? Center(

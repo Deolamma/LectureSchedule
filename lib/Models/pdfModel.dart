@@ -15,4 +15,14 @@ class PdfModel {
 
     return File(result.paths.first!);
   }
+
+  static Future<File?> pickCsv() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+    );
+    if (result == null) return null;
+
+    return File(result.paths.first!);
+  }
 }

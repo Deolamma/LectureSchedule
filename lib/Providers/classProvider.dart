@@ -9,14 +9,18 @@ import '../Models/exceptionClass.dart';
 
 class ClassProvider with ChangeNotifier {
   List<Class> _classItem = [];
+  final String? authToken;
+  final String? userId;
+
+  ClassProvider(this.authToken, this.userId, this._classItem);
 
   List<Class> get classItem {
     return [..._classItem];
   }
 
   Future<void> addClass(Class nClass) async {
-    final url = Uri.https(
-        'lecturescheduleapp-default-rtdb.firebaseio.com', '/Classes.json');
+    final url = Uri.parse(
+        'https://lecturescheduleapp-default-rtdb.firebaseio.com/$userId/Classes.json?auth=$authToken');
 
     try {
       if (_classItem.isNotEmpty) {
@@ -57,7 +61,7 @@ class ClassProvider with ChangeNotifier {
 
   Future<void> fetchData() async {
     final url = Uri.parse(
-        'https://lecturescheduleapp-default-rtdb.firebaseio.com/Classes.json');
+        'https://lecturescheduleapp-default-rtdb.firebaseio.com/$userId/Classes.json?auth=$authToken');
 
     try {
       final response = await http.get(url);
@@ -93,8 +97,8 @@ class ClassProvider with ChangeNotifier {
         .indexWhere((classItem) => classItem.courseCode == courseCode);
     final idPath = _classItem[dataIndex].id;
     Class? dataValue = _classItem[dataIndex];
-    final url = Uri.https('lecturescheduleapp-default-rtdb.firebaseio.com',
-        '/Classes/$idPath.json');
+    final url = Uri.parse(
+        'https://lecturescheduleapp-default-rtdb.firebaseio.com/$userId/Classes/$idPath.json?auth=$authToken');
 
     _classItem.removeWhere((classItem) => classItem.courseCode == courseCode);
     notifyListeners();

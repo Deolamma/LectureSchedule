@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lecture_schedule/Screens/createScheduleScreen.dart';
+import 'package:lecture_schedule/Widgets/drawer.dart';
 import 'package:provider/provider.dart';
 
 import '../Providers/scheduleProvider.dart';
@@ -23,13 +24,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       setState(() {
         _isLoading = true;
       });
-    }
 
-    Provider.of<ScheduleProvider>(context).fetchAndSetSchedule().then((_) {
-      setState(() {
-        _isLoading = false;
+      Provider.of<ScheduleProvider>(context).fetchAndSetSchedule().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
       });
-    });
+    }
 
     _isInit = false;
     super.didChangeDependencies();
@@ -39,6 +40,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     var scheduleData = Provider.of<ScheduleProvider>(context).scheduleItems;
     return Scaffold(
+      drawer: DrawerScreen(),
       appBar: AppBar(title: Text('My Schedule')),
       backgroundColor: Color(0xFFD0D0E2),
       body: _isLoading

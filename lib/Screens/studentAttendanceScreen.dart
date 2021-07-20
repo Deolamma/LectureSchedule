@@ -1,42 +1,43 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:lecture_schedule/Models/pdfModel.dart';
-import 'package:lecture_schedule/Screens/pdfViewScreen.dart';
+import 'package:csv/csv.dart';
 
 class StudentAttendanceScreen extends StatelessWidget {
   static const routeName = '/StudentAttendanceScreen';
-  const StudentAttendanceScreen({Key? key}) : super(key: key);
 
-  void onSelected(BuildContext context, int item) async {
-    switch (item) {
-      case 0:
-        {
-          final file = await PdfModel.pickFile();
-          if (file == null) return;
-          Navigator.of(context)
-              .pushNamed(PdfViewerScreen.routeName, arguments: file);
-        }
-        break;
-    }
+  Future<List<List<dynamic>>> loadingCsv(String? file) async {
+    final csvFile = File(file!).openRead();
+    return await csvFile
+        .transform(utf8.decoder)
+        .transform(
+          CsvToListConverter(),
+        )
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final file = ModalRoute.of(context)!.settings.arguments as File?;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Attendance'),
-        centerTitle: true,
-        actions: [
-          PopupMenuButton<int>(
-            onSelected: (item) => onSelected(context, item),
-            itemBuilder: (context) => [
-              PopupMenuItem<int>(
-                value: 0,
-                child: Text('Open PDF'),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+        appBar: AppBar(
+          title: Text('Attendance'),
+        ),
+        body: FutureBuilder(
+            future: loadingCsv(file!.path),
+            builder: (context, snapshot) {
+              print(snapshot.data.toString());
+              return !snapshot.hasData || snapshot.data == null
+                  ? Center(
+                      child: Text('Data Exists'),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Theme.of(context).accentColor,
+                      ),
+                    );
+            }));
   }
 }

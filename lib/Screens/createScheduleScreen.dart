@@ -1,6 +1,8 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lecture_schedule/Models/exceptionClass.dart';
+import 'package:lecture_schedule/Providers/notificationProvider.dart';
 import 'package:lecture_schedule/Providers/scheduleProvider.dart';
 import 'package:lecture_schedule/constants.dart';
 import 'package:provider/provider.dart';
@@ -100,8 +102,23 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
       _isLoading = true;
     });
     try {
+      DateTime parsedDate =
+          DateFormat('EEE, MMMM d, yyyy').parse(_newSchedule.day!);
+      // await Provider.of<Notifications>(context).scheduleNotification(
+      //   int.parse(DateTime.now().toString()),
+      //   _newSchedule.title!,
+      //   _newSchedule.location!,
+      // );
+      print(int.parse(DateFormat('y').format(parsedDate)));
+      print(int.parse(DateFormat('d').format(parsedDate)));
+      print(int.parse(DateFormat('M').format(parsedDate)));
+      print(int.parse(_hour.toString()));
+      print(int.parse(_minute.toString()));
+
       await Provider.of<ScheduleProvider>(context, listen: false)
           .addSchedule(_newSchedule);
+    } on ExceptionClass catch (error) {
+      print(error);
     } catch (error) {
       await showDialog(
         context: context,
@@ -266,13 +283,19 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
           borderRadius: BorderRadius.circular(15)),
       child: TextButton(
         onPressed: _saveForm,
-        child: Text(
-          'Save Schedule',
-          style: TextStyle(
-            color: kBackgroundColor,
-            fontFamily: 'Poppins',
-          ),
-        ),
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: kPrimaryColor,
+                ),
+              )
+            : Text(
+                'Save Schedule',
+                style: TextStyle(
+                  color: kBackgroundColor,
+                  fontFamily: 'Poppins',
+                ),
+              ),
       ),
     );
   }

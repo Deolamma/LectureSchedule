@@ -53,6 +53,11 @@ dependencies:
   collection: ^1.15.0
   flutter_svg: ^0.22.0
 
+  #used for alarming
+  flutter_local_notifications: ^6.0.0
+  #Helps in adding csv files and ultimately our attendance list.
+  csv: ^5.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,13 +75,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - Assets/Images/image1.jfif
-    - Assets/Images/image2.jpg
-    - Assets/Images/image3.jfif
-    - Assets/Images/image4.jpg
-    - Assets/Images/image5.jfif
-    - Assets/Images/image6.jpg
-    - Assets/Images/SchIcon.png
+    - Assets/Images/appIcon.jpg
+    - Assets/Icons/icons8-schedule-48.png
+    - Assets/Icons/account.svg
+    - Assets/Icons/menu.svg
+    - Assets/Icons/book.svg
+    - Assets/Icons/schedule.svg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

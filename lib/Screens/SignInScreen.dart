@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lecture_schedule/Models/exceptionClass.dart';
+import 'package:lecture_schedule/Providers/Auth.dart';
+import 'package:lecture_schedule/Providers/facultyDataProvider.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../Models/clipClass.dart';
@@ -65,7 +69,7 @@ class _SignInScreenState extends State<SignInScreen> {
             SizedBox(
               height: 50,
             ),
-            SignUpAuthForm(size: size),
+            SignInAuthForm(size: size),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -100,8 +104,8 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 }
 
-class SignUpAuthForm extends StatefulWidget {
-  const SignUpAuthForm({
+class SignInAuthForm extends StatefulWidget {
+  const SignInAuthForm({
     Key? key,
     required this.size,
   }) : super(key: key);
@@ -109,14 +113,14 @@ class SignUpAuthForm extends StatefulWidget {
   final Size size;
 
   @override
-  _SignUpAuthFormState createState() => _SignUpAuthFormState();
+  _SignInAuthFormState createState() => _SignInAuthFormState();
 }
 
-class _SignUpAuthFormState extends State<SignUpAuthForm> {
+class _SignInAuthFormState extends State<SignInAuthForm> {
   final _form = GlobalKey<FormState>();
+  var _isLoading = false;
 
   var _authData = {
-    'fullName': '',
     'email': '',
     'password': '',
   };
@@ -129,12 +133,59 @@ class _SignUpAuthFormState extends State<SignUpAuthForm> {
     super.dispose();
   }
 
-  void _submitForm() {
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('An Error Occurred!'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              setState(() {});
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submitForm() async {
     var isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     _form.currentState!.save();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await Provider.of<Auth>(context, listen: false).signin(
+        _authData['email']!,
+        _authData['password']!,
+      );
+      // .then((_) => Provider.of<FacultyDataProvider>(context, listen: false)
+      //     .addFaculty());
+    } on ExceptionClass catch (error) {
+      var errorMessage = 'Authentication failed, Exception Class';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email address is already in use.';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Could not find a user with that email.';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Invalid password.';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      const errorMessage = 'Authentication Failed';
+      print(error);
+      _showErrorDialog(errorMessage);
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -227,14 +278,20 @@ class _SignUpAuthFormState extends State<SignUpAuthForm> {
                 color: kPrimaryColor,
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Text(
-                'Sign In',
-                style: TextStyle(
-                  color: kBackgroundColor,
-                  fontFamily: 'Poppins',
-                ),
-                textAlign: TextAlign.center,
-              ),
+              child: _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).accentColor,
+                      ),
+                    )
+                  : Text(
+                      'Sign In',
+                      style: TextStyle(
+                        color: kBackgroundColor,
+                        fontFamily: 'Poppins',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
             ),
           ),
         ],

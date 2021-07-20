@@ -43,14 +43,14 @@ class ScheduleItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${location!.toUpperCase()}',
+                      '${title!.toUpperCase()}',
                       style: TextStyle(
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.bold,
                           fontSize: 18),
                     ),
                     Text(
-                      '$title',
+                      '$location',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                       ),

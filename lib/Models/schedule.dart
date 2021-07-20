@@ -5,7 +5,7 @@ class Schedule {
   final String? id;
   final String? day;
 
-  const Schedule({
+  Schedule({
     this.id,
     this.title,
     this.location,
