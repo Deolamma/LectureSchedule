@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lecture_schedule/Providers/facultyDataProvider.dart';
-import 'package:lecture_schedule/Widgets/drawer.dart';
-import 'package:lecture_schedule/Widgets/facultyGridViewWidget.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
-import '../Providers/notificationProvider.dart';
 import '../Widgets/custom_bottomNavBar_widget.dart';
+import '../Widgets/drawer.dart';
+import '../Widgets/facultyGridViewWidget.dart';
+import '../Providers/facultyDataProvider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var _isInit = true;
+  // ignore: unused_field
   var _isLoading = false;
   // @override
   // void initState() {
@@ -45,29 +45,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
         drawer: DrawerScreen(),
         backgroundColor: Colors.white,
         body: Stack(
-          children: [
-            HeaderWithTitleAndGridBody(size: size),
-            CustomBottomNavBar()
-          ],
+          children: [HeaderWithTitleAndGridBody(), CustomBottomNavBar()],
         ));
   }
 }
 
 class HeaderWithTitleAndGridBody extends StatelessWidget {
-  const HeaderWithTitleAndGridBody({
-    Key? key,
-    required this.size,
-  }) : super(key: key);
-
-  final Size size;
-
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     final facultyList = Provider.of<FacultyDataProvider>(context).facultyData;
     return SingleChildScrollView(
       child: Column(
@@ -118,7 +108,7 @@ class HeaderWithTitleAndGridBody extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: size.height * 0.1,
+                  top: size.height * 0.15,
                   left: 20,
                   right: 20,
                   child: Container(
@@ -135,13 +125,14 @@ class HeaderWithTitleAndGridBody extends StatelessWidget {
                                   .textTheme
                                   .headline4!
                                   .copyWith(
-                                    fontFamily: 'Fredericka',
+                                    fontFamily: 'Lora',
+                                    fontStyle: FontStyle.italic,
                                     color: kBackgroundColor,
                                   )),
                           TextSpan(
                             text: 'Dule',
                             style:
-                                Theme.of(context).textTheme.headline2!.copyWith(
+                                Theme.of(context).textTheme.headline3!.copyWith(
                                       fontFamily: 'Poppins',
                                       color: kBackgroundColor,
                                     ),

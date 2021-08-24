@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lecture_schedule/Screens/classScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../Models/exceptionClass.dart';
 import '../Providers/classProvider.dart';
-import '../Screens/studentAttendanceScreen.dart';
 import '../constants.dart';
 
 class ClassItem extends StatelessWidget {
@@ -15,6 +13,7 @@ class ClassItem extends StatelessWidget {
   final String? day;
   final String? duration;
   final String? timeOfLecture;
+  final String? location;
   const ClassItem({
     this.id,
     this.courseCode,
@@ -23,15 +22,17 @@ class ClassItem extends StatelessWidget {
     this.level,
     this.day,
     this.timeOfLecture,
+    this.location,
   });
 
   @override
   Widget build(BuildContext context) {
     var scaffold = ScaffoldMessenger.of(context);
     return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(StudentAttendanceScreen.routeName);
-      },
+      onTap: null,
+      // onTap: () {
+      //   Navigator.of(context).pushNamed(StudentAttendanceScreen.routeName);
+      // },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         decoration: BoxDecoration(
@@ -72,6 +73,12 @@ class ClassItem extends StatelessWidget {
               ),
               Text(
                 courseTitle!,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              Text(
+                location!,
                 style: TextStyle(
                   fontFamily: 'Poppins',
                 ),

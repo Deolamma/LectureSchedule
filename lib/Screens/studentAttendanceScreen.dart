@@ -7,8 +7,8 @@ import 'package:csv/csv.dart';
 class StudentAttendanceScreen extends StatelessWidget {
   static const routeName = '/StudentAttendanceScreen';
 
-  Future<List<List<dynamic>>> loadingCsv(String? file) async {
-    final csvFile = File(file!).openRead();
+  Future<List<List<dynamic>>> loadingCsv(String file) async {
+    final csvFile = File(file).openRead();
     return await csvFile
         .transform(utf8.decoder)
         .transform(
@@ -29,7 +29,7 @@ class StudentAttendanceScreen extends StatelessWidget {
             future: loadingCsv(file!.path),
             builder: (context, snapshot) {
               print(snapshot.data.toString());
-              return !snapshot.hasData || snapshot.data == null
+              return snapshot.hasError || snapshot.data == null
                   ? Center(
                       child: Text('Data Exists'),
                     )

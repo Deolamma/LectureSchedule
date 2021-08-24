@@ -1,11 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lecture_schedule/Providers/Auth.dart';
-import 'package:lecture_schedule/Providers/facultyDataProvider.dart';
-import 'package:lecture_schedule/Providers/notificationProvider.dart';
-import 'package:lecture_schedule/Screens/HomeScreen.dart';
-import 'package:lecture_schedule/Screens/SignUpScreen.dart';
-import 'package:lecture_schedule/Screens/scheduleScreen.dart';
-import 'package:lecture_schedule/Widgets/drawer.dart';
 import 'package:provider/provider.dart';
 
 import './constants.dart';
@@ -17,10 +10,17 @@ import './Screens/classScreen.dart';
 import './Screens/CreateClassScreen.dart';
 import './Screens/createScheduleScreen.dart';
 
+import './Screens/HomeScreen.dart';
+import './Screens/SignUpScreen.dart';
+import './Screens/departmentScreen.dart';
+import './Screens/scheduleScreen.dart';
+
 import './Providers/classProvider.dart';
 import './Providers/scheduleProvider.dart';
+import './Providers/Auth.dart';
+import './Providers/facultyDataProvider.dart';
 
-void main() async {
+void main() {
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp(),
 
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
             auth.userId,
           ),
         ),
-        ChangeNotifierProvider(create: (context) => Notifications()),
+        //ChangeNotifierProvider(create: (context) => Notifications()),
         ChangeNotifierProxyProvider<Auth, FacultyDataProvider>(
           create: (context) => FacultyDataProvider([], ''),
           update: (context, auth, previousFacultyData) => FacultyDataProvider(
@@ -85,6 +85,7 @@ class MyApp extends StatelessWidget {
             SignUpScreen.routeName: (context) => SignUpScreen(),
             PdfViewerScreen.routeName: (context) => PdfViewerScreen(),
             CreateClassScreen.routeName: (context) => CreateClassScreen(),
+            DepartmentScreen.routeName: (context) => DepartmentScreen(),
           },
         ),
       ),

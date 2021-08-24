@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lecture_schedule/Models/exceptionClass.dart';
-import 'package:lecture_schedule/Providers/Auth.dart';
-import 'package:lecture_schedule/Providers/facultyDataProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import '../Providers/Auth.dart';
 import '../Models/clipClass.dart';
+import '../Models/exceptionClass.dart';
 import '../Screens/SignUpScreen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -170,9 +169,7 @@ class _SignInAuthFormState extends State<SignInAuthForm> {
       //     .addFaculty());
     } on ExceptionClass catch (error) {
       var errorMessage = 'Authentication failed, Exception Class';
-      if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email address is already in use.';
-      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
+      if (error.toString().contains('EMAIL_NOT_FOUND')) {
         errorMessage = 'Could not find a user with that email.';
       } else if (error.toString().contains('INVALID_PASSWORD')) {
         errorMessage = 'Invalid password.';

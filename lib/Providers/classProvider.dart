@@ -38,6 +38,7 @@ class ClassProvider with ChangeNotifier {
           'courseCode': nClass.courseCode,
           'courseTitle': nClass.courseTitle,
           'timeOfLecture': nClass.timeOfLecture,
+          'location': nClass.location,
           'startDate': nClass.startDate,
           'endDate': nClass.endDate,
         }),
@@ -49,6 +50,7 @@ class ClassProvider with ChangeNotifier {
           courseCode: nClass.courseCode,
           courseTitle: nClass.courseTitle,
           endDate: nClass.endDate,
+          location: nClass.location,
           startDate: nClass.startDate,
           timeOfLecture: nClass.timeOfLecture);
 
@@ -80,6 +82,7 @@ class ClassProvider with ChangeNotifier {
             courseCode: classData['courseCode'],
             courseTitle: classData['courseTitle'],
             timeOfLecture: classData['timeOfLecture'],
+            location: classData['location'],
             endDate: classData['endDate'],
             startDate: classData['startDate'],
           ),

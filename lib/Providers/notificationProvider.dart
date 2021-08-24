@@ -1,68 +1,92 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+// import 'package:flutter/material.dart';
+// import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+// // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// // import 'package:timezone/data/latest.dart' as tz;
+// // import 'package:timezone/timezone.dart' as tz;
 
-class Notifications with ChangeNotifier {
-  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+// class Notifications with ChangeNotifier {
+//   /*Future initialize() async {
+//     return await AndroidAlarmManager.initialize();
+//   }
 
-  Future initialize() async {
-    FlutterLocalNotificationsPlugin fltrNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+//   Future ringOnce({int? year, int? month, int? day, int? hour, int? minute,}) async{
+//     var timeStamp = int.parse(DateTime.now().toIso8601String());
+//     await AndroidAlarmManager.oneShotAt(DateTime(year!, month!, day!, hour!, minute!), timeStamp, fireAlarm)
 
-    AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('ic_launcher');
+//   }
+//   // FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+//   //     FlutterLocalNotificationsPlugin();
 
-    IOSInitializationSettings iosInitializationSettings =
-        IOSInitializationSettings();
+//   // Future initialize() async {
+//   //   FlutterLocalNotificationsPlugin fltrNotificationsPlugin =
+//   //       FlutterLocalNotificationsPlugin();
 
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: androidInitializationSettings,
-      iOS: iosInitializationSettings,
-    );
+//   //   AndroidInitializationSettings androidInitializationSettings =
+//   //       AndroidInitializationSettings('ic_launcher');
 
-    await fltrNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
-    tz.initializeTimeZones();
-  }
+//   //   IOSInitializationSettings iosInitializationSettings =
+//   //       IOSInitializationSettings();
 
-  Future scheduleNotification(
-    int id,
-    String title,
-    String body,
-    // int year,
-    // int month,
-    // int day,
-    // int hour,
-    // int minute,
-  ) async {
-    var androidNotificationDetails = AndroidNotificationDetails(
-      'id',
-      'channel',
-      'this is my channel',
-    );
-    var iosNotificationDetails = IOSNotificationDetails();
+//   //   final InitializationSettings initializationSettings =
+//   //       InitializationSettings(
+//   //     android: androidInitializationSettings,
+//   //     iOS: iosInitializationSettings,
+//   //   );
 
-    // tz.TZDateTime zonedSchedule =
-    //     tz.TZDateTime.local(year, month, day, hour, minute);
+//   //   await fltrNotificationsPlugin.initialize(initializationSettings,
+//   //       onSelectNotification: onSelectNotification);
+//   //   tz.initializeTimeZones();
+//   // }
 
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        //  zonedSchedule,
-        tz.TZDateTime.now(tz.local).add(Duration(seconds: 5)),
-        NotificationDetails(
-            android: androidNotificationDetails, iOS: iosNotificationDetails),
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        androidAllowWhileIdle: true,
-        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
+//   // Future scheduleNotification(
+//   //   int? id,
+//   //   String title,
+//   //   String body,
+//   //   // int? year,
+//   //   // int? month,
+//   //   // int? day,
+//   //   // int? hour,
+//   //   // int? minute,
+//   // ) async {
+//   //   var androidNotificationDetails = AndroidNotificationDetails(
+//   //     'id',
+//   //     'channel',
+//   //     'this is my channel',
+//   //   );
+//   //   var iosNotificationDetails = IOSNotificationDetails();
 
-    // await _flutterLocalNotificationsPlugin.periodicallyShow(id, title, body, RepeatInterval.weekly, notificationDetails);
-  }
+//   //   // tz.TZDateTime zonedSchedule =
+//   //   //     tz.TZDateTime.local(year, month, day, hour, minute);
 
-  Future onSelectNotification(String? payload) async {}
-}
+//   //   await _flutterLocalNotificationsPlugin.zonedSchedule(
+//   //       id,
+//   //       title,
+//   //       body,
+//   //       //  zonedSchedule,
+//   //       tz.TZDateTime.now(tz.local).add(Duration(seconds: 5)),
+//   //       NotificationDetails(
+//   //           android: androidNotificationDetails, iOS: iosNotificationDetails),
+//   //       uiLocalNotificationDateInterpretation:
+//   //           UILocalNotificationDateInterpretation.absoluteTime,
+//   //       androidAllowWhileIdle: true,
+//   //       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
+
+//   //   // await _flutterLocalNotificationsPlugin.periodicallyShow(id, title, body, RepeatInterval.weekly, notificationDetails);
+//   // }
+
+//   // Future 
+//   //onSelectNotification(String? payload) async {}
+// }
+
+// void fireAlarm(BuildContext context, String? title, String? body){
+//   showDialog(context: context, builder: (ctx)=>AlertDialog(
+//     title:Text('Alert! Alert! Alert!') ,
+//     content: Text('$title \n $body'),
+//     actions: [
+//       TextButton(onPressed: (){
+
+//       }, child: Text('Ok'),)
+//     ],
+//   ),);
+
+// }

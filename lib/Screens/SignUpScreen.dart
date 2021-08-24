@@ -77,7 +77,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 InkWell(
-                  onTap: null,
+                  onTap: () {
+                    Navigator.of(context).pushReplacementNamed('/');
+                  },
                   child: Text(
                     'Sign In',
                     style: TextStyle(
@@ -137,9 +139,7 @@ class _SignUpAuthFormState extends State<SignUpAuthForm> {
           TextButton(
             child: Text('Okay'),
             onPressed: () {
-              setState(() {
-                _isLoading = false;
-              });
+              setState(() {});
               Navigator.of(ctx).pop();
             },
           )
@@ -164,17 +164,19 @@ class _SignUpAuthFormState extends State<SignUpAuthForm> {
       );
     } on ExceptionClass catch (error) {
       var errorMessage = 'Authentication failed, Exception Class';
-      if (error.toString().contains('INVALID_EMAIL')) {
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email address is already in use.';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
         errorMessage = 'This is not a valid email address';
       } else if (error.toString().contains('WEAK_PASSWORD')) {
         errorMessage = 'This password is too weak.';
       }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      const errorMessage = 'Authentication Failed';
+      print(error);
+      _showErrorDialog(errorMessage);
     }
-    // catch (error) {
-    //   const errorMessage = 'Authentication Failed';
-    //   print(error);
-    //   _showErrorDialog(errorMessage);
-    // }
     setState(() {
       _isLoading = false;
     });

@@ -11,7 +11,6 @@ import '../Screens/pdfViewScreen.dart';
 import '../Screens/studentAttendanceScreen.dart';
 import '../Widgets/class_item_widget.dart';
 import '../Widgets/createContentWidget.dart';
-import '../Widgets/drawer.dart';
 
 class ClassScreen extends StatefulWidget {
   const ClassScreen({Key? key}) : super(key: key);
@@ -76,7 +75,7 @@ class _ClassScreenState extends State<ClassScreen> {
     var classData = Provider.of<ClassProvider>(context).classItem;
 
     return Scaffold(
-      drawer: DrawerScreen(),
+      //drawer: DrawerScreen(),
       appBar: AppBar(
         title: Text('Classes'),
         centerTitle: true,
@@ -126,12 +125,14 @@ class _ClassScreenState extends State<ClassScreen> {
                       level: (classData[index].level).toString(),
                       courseCode: classData[index].courseCode,
                       courseTitle: classData[index].courseTitle,
+                      location: classData[index].location,
                       duration: extractWeekNo.toString(),
                     );
                   }),
       floatingActionButton: classData.isEmpty
           ? null
           : FloatingActionButton(
+              backgroundColor: Theme.of(context).accentColor,
               onPressed: () {
                 Navigator.of(context).pushNamed(CreateClassScreen.routeName);
               },

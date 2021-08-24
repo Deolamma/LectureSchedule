@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../Screens/createClassScreen.dart';
 
 class CreateContentWidget extends StatelessWidget {
   const CreateContentWidget({

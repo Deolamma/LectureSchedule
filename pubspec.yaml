@@ -40,7 +40,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   #The following adds firestore services
-  cloud_firestore: ^2.3.0
+
   #Allows us to use the date formatter i.e dateFormat()
   date_format: ^2.0.2
   intl: ^0.17.0
@@ -53,27 +53,17 @@ dependencies:
   collection: ^1.15.0
   flutter_svg: ^0.22.0
 
-  #used for alarming
-  flutter_local_notifications: ^6.0.0
+
   #Helps in adding csv files and ultimately our attendance list.
   csv: ^5.0.0
+  flutter_local_notifications: ^8.1.1+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
   assets:
     - Assets/Images/appIcon.jpg
     - Assets/Icons/icons8-schedule-48.png
@@ -82,18 +72,6 @@ flutter:
     - Assets/Icons/book.svg
     - Assets/Icons/schedule.svg
 
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
   fonts:
     - family: Fredericka
       fonts:
@@ -108,12 +86,13 @@ flutter:
         - asset: Assets/fonts/Poppins-Regular.ttf
         - asset: Assets/fonts/Poppins-Black.ttf
           weight: 900
+    - family: Lora
+      fonts:
+        - asset: Assets/fonts/Lora-Regular.ttf
       
         
         
-    - family: Quicksand
-      fonts:
-        - asset: Assets/fonts/Quicksand-VariableFont_wght.ttf
+  
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

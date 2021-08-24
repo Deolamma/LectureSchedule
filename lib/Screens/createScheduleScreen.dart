@@ -1,13 +1,15 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lecture_schedule/Models/exceptionClass.dart';
-import 'package:lecture_schedule/Providers/notificationProvider.dart';
-import 'package:lecture_schedule/Providers/scheduleProvider.dart';
-import 'package:lecture_schedule/constants.dart';
 import 'package:provider/provider.dart';
 
+
+import '../Models/exceptionClass.dart';
 import '../Models/schedule.dart';
+
+import '../Providers/scheduleProvider.dart';
+
+import '../constants.dart';
 
 class CreateScheduleScreen extends StatefulWidget {
   static const routeName = '/CreateScheduleScreen';
@@ -45,6 +47,8 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
     _timeController.dispose();
     super.dispose();
   }
+
+
 
   Future<Null> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -102,18 +106,11 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
       _isLoading = true;
     });
     try {
-      DateTime parsedDate =
-          DateFormat('EEE, MMMM d, yyyy').parse(_newSchedule.day!);
       // await Provider.of<Notifications>(context).scheduleNotification(
       //   int.parse(DateTime.now().toString()),
       //   _newSchedule.title!,
       //   _newSchedule.location!,
       // );
-      print(int.parse(DateFormat('y').format(parsedDate)));
-      print(int.parse(DateFormat('d').format(parsedDate)));
-      print(int.parse(DateFormat('M').format(parsedDate)));
-      print(int.parse(_hour.toString()));
-      print(int.parse(_minute.toString()));
 
       await Provider.of<ScheduleProvider>(context, listen: false)
           .addSchedule(_newSchedule);
@@ -273,7 +270,22 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
     );
   }
 
+  // void fireAlarm() {
+  //   print('Alarm fired at ${DateTime.now()}');
+  // }
+
   Container saveFormButton(Size size, BuildContext context) {
+    //  DateTime parsedDate =
+    //         DateFormat('EEE, MMMM d, yyyy').parse(_newSchedule.day!);
+    //          var year = int.parse(DateFormat('y').format(parsedDate));
+    //     var day = int.parse(DateFormat('d').format(parsedDate));
+    //     var month = int.parse(DateFormat('M').format(parsedDate));
+    //     var hour = int.parse(_hour.toString());
+    //     var minute = int.parse(_minute.toString());
+    //     var timeStamp = int.parse(DateTime.now().toIso8601String());
+
+    //     await AndroidAlarmManager.oneShotAt(
+    //         DateTime(year, month, day, hour, minute), timeStamp, fireAlarm);
     return Container(
       height: 54,
       width: size.width,

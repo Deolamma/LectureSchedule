@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lecture_schedule/Screens/classScreen.dart';
-import 'package:lecture_schedule/Screens/scheduleScreen.dart';
-import 'package:lecture_schedule/constants.dart';
+
+import '../Screens/classScreen.dart';
+import '../Screens/scheduleScreen.dart';
+import '../constants.dart';
 
 class DrawerScreen extends StatelessWidget {
   const DrawerScreen({Key? key}) : super(key: key);
@@ -93,6 +93,17 @@ class DrawerScreen extends StatelessWidget {
                     .pushReplacementNamed(ClassScreen.routeName);
               },
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Divider(
+                height: 1,
+                color: kPrimaryColor,
+              ),
+            ),
+            buildListTile(Icons.logout, 'Log Out', () {
+              Navigator.of(context)
+                  .pushReplacementNamed(ScheduleScreen.routeName);
+            }),
           ],
         ),
       ),

@@ -22,6 +22,11 @@ class CreateClassScreen extends StatefulWidget {
 class _CreateClassScreenState extends State<CreateClassScreen> {
   String? _hour, _minute, _time;
   var _isLoading = false;
+  // void startServiceInPlatform() async {
+  //   var methodChannel = MethodChannel("com.example.lecture_schedule");
+  //   String data = await methodChannel.invokeMethod("startForeground");
+  //   debugPrint(data);
+  // }
 
   final _form = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
@@ -36,14 +41,9 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
   final _startDateFocusNode = FocusNode();
   final _endDateFocusNode = FocusNode();
   final _timeFocusNode = FocusNode();
+  final _locationFocusNode = FocusNode();
 
-  var _newClass = Class(
-    courseTitle: "",
-    courseCode: "",
-    level: 0,
-    startDate: '',
-    endDate: '',
-  );
+  var _newClass = Class();
 
   @override
   void dispose() {
@@ -55,6 +55,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
     _startDateController.dispose();
     _endDateController.dispose();
     _timeController.dispose();
+    _locationFocusNode.dispose();
 
     super.dispose();
   }
@@ -65,7 +66,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
         context: context,
         initialDate: selectedDate,
         initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(2019),
+        firstDate: DateTime.now(),
         lastDate: DateTime(2025),
         builder: (BuildContext context, Widget? child) {
           return Theme(data: Theme.of(context), child: child!);
@@ -194,13 +195,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
                               },
                               //OnSaved is triggered when the Form key's current state is saved
                               onSaved: (value) {
-                                _newClass = Class(
-                                    level: int.parse(value!),
-                                    courseCode: _newClass.courseCode,
-                                    courseTitle: _newClass.courseTitle,
-                                    startDate: _newClass.startDate,
-                                    endDate: _newClass.endDate,
-                                    timeOfLecture: _newClass.timeOfLecture);
+                                _newClass.level = int.parse(value!);
                               },
                             ),
                             TextFormField(
@@ -223,13 +218,8 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
                               },
                               //OnSaved is triggered when the Form key's current state is saved
                               onSaved: (value) {
-                                _newClass = Class(
-                                    level: _newClass.level,
-                                    courseCode: value!.toUpperCase().trim(),
-                                    courseTitle: _newClass.courseTitle,
-                                    startDate: _newClass.startDate,
-                                    endDate: _newClass.endDate,
-                                    timeOfLecture: _newClass.timeOfLecture);
+                                _newClass.courseCode =
+                                    value!.toUpperCase().trim();
                               },
                             ),
                             TextFormField(
@@ -246,16 +236,32 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
                                 }
                                 return null;
                               },
+                              onFieldSubmitted: (_) {
+                                currentFocus.requestFocus(_locationFocusNode);
+                              },
 
                               //OnSaved is triggered when the Form key's current state is saved
                               onSaved: (value) {
-                                _newClass = Class(
-                                    level: _newClass.level,
-                                    courseCode: _newClass.courseCode,
-                                    courseTitle: value!.toUpperCase(),
-                                    startDate: _newClass.startDate,
-                                    endDate: _newClass.endDate,
-                                    timeOfLecture: _newClass.timeOfLecture);
+                                _newClass.courseTitle = value!.toUpperCase();
+                              },
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: 'Location',
+                              ),
+                              textInputAction: TextInputAction.next,
+                              focusNode: _locationFocusNode,
+                              keyboardType: TextInputType.text,
+
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'This field cannot be left empty';
+                                }
+                                return null;
+                              },
+                              //OnSaved is triggered when the Form key's current state is saved
+                              onSaved: (value) {
+                                _newClass.location = value!;
                               },
                             ),
                             InkWell(
@@ -281,13 +287,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
 
                                   //OnSaved is triggered when the Form key's current state is saved
                                   onSaved: (value) {
-                                    _newClass = Class(
-                                        level: _newClass.level,
-                                        courseCode: _newClass.courseCode,
-                                        courseTitle: _newClass.courseTitle,
-                                        startDate: value,
-                                        endDate: _newClass.endDate,
-                                        timeOfLecture: _newClass.timeOfLecture);
+                                    _newClass.startDate = value!;
                                   },
                                 ),
                               ),
@@ -323,13 +323,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
 
                                   //OnSaved is triggered when the Form key's current state is saved
                                   onSaved: (value) {
-                                    _newClass = Class(
-                                        level: _newClass.level,
-                                        courseCode: _newClass.courseCode,
-                                        courseTitle: _newClass.courseTitle,
-                                        startDate: _newClass.startDate,
-                                        endDate: value,
-                                        timeOfLecture: _newClass.timeOfLecture);
+                                    _newClass.endDate = value;
                                   },
                                 ),
                               ),
@@ -355,14 +349,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
 
                                   //OnSaved is triggered when the Form key's current state is saved
                                   onSaved: (value) {
-                                    _newClass = Class(
-                                      level: _newClass.level,
-                                      courseCode: _newClass.courseCode,
-                                      courseTitle: _newClass.courseTitle,
-                                      startDate: _newClass.startDate,
-                                      endDate: _newClass.endDate,
-                                      timeOfLecture: value,
-                                    );
+                                    _newClass.timeOfLecture = value;
                                   },
                                 ),
                               ),
@@ -387,6 +374,10 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
           borderRadius: BorderRadius.circular(15)),
       child: TextButton(
         onPressed: _saveForm,
+        // onPressed: () {
+        //   _saveForm();
+        //   startServiceInPlatform();
+        // },
         child: Text(
           'Save Class',
           style: TextStyle(

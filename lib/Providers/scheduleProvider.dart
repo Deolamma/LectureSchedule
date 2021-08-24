@@ -83,7 +83,6 @@ class ScheduleProvider with ChangeNotifier {
         _scheduleItems.indexWhere((scheduleItem) => scheduleItem.id == id);
     Schedule? scheduleDataValue = _scheduleItems[scheduleDataIndex];
     var response = await http.delete(url);
-    print(response.statusCode);
     _scheduleItems.removeWhere((scheduleItem) => scheduleItem.id == id);
     notifyListeners();
     //if the statusCode returns 400 and above it indicates we have an error;

@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../Models/DepartmentModel.dart';
 import '../Models/facultyModel.dart';
 
 class FacultyDataProvider with ChangeNotifier {
@@ -283,8 +281,6 @@ class FacultyDataProvider with ChangeNotifier {
                   ))
               .toList()));
     });
-
-    print(loadedData[0].department![0].name);
 
     _facultyData = loadedData;
     notifyListeners();

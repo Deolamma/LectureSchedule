@@ -1,13 +1,14 @@
 import 'package:flutter/foundation.dart';
 
 class Class with ChangeNotifier {
-  final String? id;
-  final int? level;
-  final String? courseCode;
-  final String? courseTitle;
-  final String? startDate;
-  final String? endDate;
-  final String? timeOfLecture;
+  String? id;
+  int? level;
+  String? location;
+  String? courseCode;
+  String? courseTitle;
+  String? startDate;
+  String? endDate;
+  String? timeOfLecture;
 
   Class({
     this.id,
@@ -17,5 +18,6 @@ class Class with ChangeNotifier {
     this.startDate,
     this.endDate,
     this.timeOfLecture,
+    this.location,
   });
 }
